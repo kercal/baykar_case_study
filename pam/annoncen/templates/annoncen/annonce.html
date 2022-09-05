@@ -1,0 +1,280 @@
+{% extends 'annoncen/base.html' %}
+{% load static %}
+
+{% block link %} 
+    <link rel="stylesheet" href="{% static 'annoncen/css/gallery.css' %}" />
+    <link rel="stylesheet" href="{% static 'annoncen/css/annonce.css' %}" />
+{% endblock %}
+
+{% block scripts %} 
+    <script type="text/javascript" src="{% static 'annoncen/javascript/gallery.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+    {{ annonce.titel}}
+{% endblock title%}
+
+{% block content_title %}
+    {% if annonce.typ %}
+        Ich suche:
+    {% else %}
+        Ich biete:
+    {% endif %}
+    {{ annonce.titel}}
+{% endblock %}
+
+{% block content %}
+    
+        <div id="annonceWrap" class="border rounded p-4 shadow mb-4">
+            <p>
+                <b>Ersteller:</b> <br> 
+                <a href="{% url 'annoncen:profile' annonce.author %}">{{annonce.author}}</a>
+            </p>
+            {% if user != annonce.author and annonce.author.profile.enableChat %}
+                <p>
+                    <a class="btn btn-success" href="{% url 'chat:message_user_create' annonce.author.username %}">
+                        Ersteller kontaktieren
+                    </a>
+                </p>
+            {% endif %}
+            {% if annonce.reserviert != 0 %}
+                {% if user == annonce.author %}
+                    <b>Reserviert von:</b>
+                    {% for user in annonce.reserviert_von.all %}
+                        {{user.username}} (Reservierung
+                        {% if annonce.reserviert == 2%} bestätigt.{% else %} nicht bestätigt.{% endif %})
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+            {% if annonce.reserviert == 2 and user == annonce.reserviert_von.all %}
+                <b>Du hast diese Annonce reserviert.</b>
+            {% endif %}
+            
+
+            {% if annonce.bild_set.all %}
+                <div class="slideshow-container">
+                    {% for image in annonce.bild_set.all %} 
+                        <div class="mySlides">
+                        <div class="numbertext">{{ forloop.counter }} / {{ annonce.bild_set.all.count }}</div>
+                        <div class="d-flex justify-content-center ImgWrap">
+                            <img class="Img" src="{{image.bild.url}}" height="300">
+                        </div>
+                        </div>
+                    {% endfor %}
+                
+                    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+                </div>
+                <br>
+                
+                <div style="text-align:center">
+                {% for image in annonce.bild_set.all %} 
+                    <span class="dot" onclick="currentSlide({{ forloop.counter }})"></span>
+                {% endfor %}
+                </div>
+            {% endif %}
+            
+            {% if annonce.height %}
+                <p>
+                    <b> Maße:</b> <br>
+                    Höhe: {{annonce.height}} cm, Länge: {{annonce.length}} cm, Breite: {{annonce.width }} cm
+                </p>
+            {% endif %}
+
+            {% if annonce.available_until %}
+                <p>
+                    <b>Verfügbar bis:</b><br>
+                    {{ annonce.available_until}}
+                    {% if annonce.author == request.user %}
+                        <br>
+                        <a class="btn btn-secondary btn-sm"href="{% url 'annoncen:extend' annonce.pk %}">Jetzt verlängern</a>
+                    {% endif %}
+                </p>
+            {% endif %}
+
+            
+            <p>
+                <b>Beschreibung:</b><br>
+                {{annonce.beschreibung}}
+            </p>
+
+            {% if annonce.kategorie.all %}
+                <p>
+                    {% for kategorie in annonce.kategorie.all %}
+                        <a type="button" class="btn btn-success btn-sm" href="{% url 'annoncen:category' kategorie %}">{{ kategorie }}</a><br>
+                    {% endfor %}
+                </p>
+            {% endif %}
+
+            {% if annonce.nachricht %}
+                <p>
+                    <b>zusätzliche Informationen:</b><br>
+                    {{annonce.nachricht}}<br>
+                </p>
+            {% endif %}
+            <p>
+                <b>gepostet am:</b> <br>
+                {{annonce.date|date}}
+                </p>
+            <p>
+                <b>Kontakt:</b><br>
+                {% if annonce.name %}
+                    {{annonce.name}}
+                {% endif %}
+                {% if annonce.straße %}
+                    {{annonce.straße}}
+                {% endif %}
+                {% if annonce.hausnummer %}
+                    {{annonce.hausnummer}}<br>
+                {% endif %}
+                {% if annonce.postleitzahl %}
+                    {{annonce.postleitzahl}}
+                {% endif %}
+                {% if annonce.stadt %}
+                    {{annonce.stadt}}<br>
+                {% endif %}
+                {% if annonce.adresszusatz %}
+                    {{annonce.adresszusatz}}<br>
+                {% endif %}
+                {{annonce.kontakt}}
+            </p>
+
+            {% if request.user.is_authenticated %}
+                {% if annonce.reserviert == 0 or not hat_reserviert %}
+                    <p>
+                        <a class="btn btn-warning" href="{% url 'annoncen:reservieren' annoncen_id=annonce.id user_id=request.user.id todo='1' %}">
+                            Reservieren
+                        </a>
+                    </p>
+                {% elif hat_reserviert or annonce.reserviert == 2 and annonce.author == request.user %}
+                    <p>
+                        <a class="btn btn-danger" href="{% url 'annoncen:reservieren' annoncen_id=annonce.id user_id=request.user.id todo='0'%}">
+                            Nicht mehr reservieren
+                        </a>
+                    </p>
+                {% endif %}
+            {% endif %}
+
+                
+            {% if user == annonce.author %}
+                <a class="btn btn-secondary btn-sm"href="{% url 'annoncen:edit' annonce.id %}">
+                    Annonce bearbeiten
+                </a>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Annonce löschen
+                </button>
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Löschen</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                        Soll die Annonce wirklich gelöscht werden?
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                        <a type="button" class="btn btn-danger" href="{% url 'annoncen:delete' annonce.id %}">Löschen</a>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+{% endblock content %}
+
+{% block sidebar %}
+
+{% if request.user.is_authenticated %}
+{% if annonce.gemerkt == 0 or not hat_gemerkt %}
+    <p>
+        <a class="btn btn-dark" href="{% url 'annoncen:merken' annoncen_id=annonce.id user_id=request.user.id todo='1' %}">
+            Zur Merkliste hinzufügen
+        </a>
+    </p>
+{% elif hat_gemerkt or annonce.gemerkt == 1 %}
+    <p>
+        <a class="btn btn-outline-dark" href="{% url 'annoncen:merken' annoncen_id=annonce.id user_id=request.user.id todo='0'%}">
+            Von der Merkliste löschen
+        </a>
+    </p>
+{% endif %}
+{% endif %}
+<br>
+
+        <div > 
+            {% if three_newest_annonce_with_same_author %}
+                <div>
+                    <h5>Gleicher Ersteller</h5>
+                    <div class="list-group mt-1">
+                        {% for annonce in three_newest_annonce_with_same_author %}
+                            <a class="list-group-item list-group-item-action" href="/annonce/{{annonce.id}}">
+                                <div class="d-flex flex-column justify-content-center">
+                                    {% if annonce.typ %}
+                                        <span class="badge bg-primary mb-1" style="width: fit-content;">Gesuch</span>
+                                    {% else %}
+                                        <span class="badge bg-success mb-1" style="width: fit-content;">Angebot</span>
+                                    {% endif %}
+                                    <h5 class="mb-1">{{ annonce }}</h5>
+                                    <small>{{ annonce.date|date }}</small>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>    
+            {% endif %}
+
+            {% if same_category %}
+                <div>
+                    <h5>Gleiche Kategorie</h5>
+                    <div class="list-group mt-1">
+                        {% for annonce in same_category %}
+                            <a class="list-group-item list-group-item-action" href="/annonce/{{annonce.id}}">
+                                <div class="d-flex flex-column justify-content-center">
+                                    {% if annonce.typ %}
+                                        <span class="badge bg-primary mb-1" style="width: fit-content;">Gesuch</span>
+                                    {% else %}
+                                        <span class="badge bg-success mb-1" style="width: fit-content;">Angebot</span>
+                                    {% endif %}
+                                    <h5 class="mb-1">{{ annonce }}</h5>
+                                    <small>{{ annonce.date|date }}</small>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>    
+            {% endif %}
+
+            {% if closest %}
+                <div>
+                    <h5>In der Nähe dieser Annonce</h5>
+                    <div class="list-group mt-1"">
+                        {% for annonce in closest %}
+                            <a class="list-group-item list-group-item-action" href="/annonce/{{annonce.id}}">
+                                <div class="d-flex flex-column justify-content-center">
+                                    {% if annonce.typ %}
+                                        <span class="badge bg-primary mb-1" style="width: fit-content;">Gesuch</span>
+                                    {% else %}
+                                        <span class="badge bg-success mb-1" style="width: fit-content;">Angebot</span>
+                                    {% endif %}
+                                    <h5 class="mb-1">{{ annonce.titel }}</h5>
+                                    <small>{{ annonce.date|date }}</small>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>    
+            {% endif %}
+            {% if actualmap %}
+            <div id="miniMap" class="list-group mt-1 mb-3">
+                {{actualmap | safe}}
+                <div class="d-flex  flex-column justify-content-center">
+                    <a type="button" class="btn btn-secondary btn-block" href="{% url 'maps:bigmapwithstartpoint' annonce.id %}">Große Kartenansicht</a>
+                </div>
+            </div>
+            {% endif %}
+    
+{% endblock sidebar %}
+
+

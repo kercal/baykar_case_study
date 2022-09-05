@@ -1,0 +1,14 @@
+{% extends 'annoncen/base.html' %}
+
+{% block title %}
+    Erfolgreich erstellt
+{% endblock title%}
+
+{% block content_title %}
+    {{ annonce.titel}} wurde erfolgreich erstellt!
+{% endblock %}
+
+{% block content %}
+    <a href="{% url 'annoncen:annonce' annonce.pk %}">Sieh dir die Annonce an</a> oder erstelle eine 
+    <a href="{% url 'annoncen:createannonce' %}">weitere Annonce.</a>
+    {% endblock %}   

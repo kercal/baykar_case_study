@@ -1,0 +1,56 @@
+{% extends 'annoncen/base.html' %} 
+{% load static %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content_title %}
+Ergebnisse: {{searched}}<br/>
+{% endblock %}
+
+{% block content %} 
+
+    {% if results %}
+    
+
+    <div class="list-group mt-4" style="display: grid !important; grid-template-columns: repeat(2, 1fr);">
+        {% for annonce in results %}
+            <a class="list-group-item list-group-item-action d-flex align-items-center" href="/annonce/{{annonce.id}}" style="word-break: break-word;">
+
+                <div class="d-flex justify-content-start align-items-center">
+                    {% if annonce.bild_set.all %}
+                            {% for image in annonce.bild_set.all %}
+                                {% if image.isCoverImage %}
+                                    <div class="rounded" style="height: 150px; max-width: 250px; overflow: hidden;">
+                                        <img src="{{image.bild.url}}" height="150">
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <div class="d-flex justify-content-center align-items-center border rounded" style="height: 150px; width: 250px;">              
+                                    <div>
+                                        Kein Bild
+                                    </div>
+                            </div>
+                    {% endif %}
+
+                    <div class="d-flex flex-column justify-content-center ps-3">
+                        {% if annonce.typ %}
+                            <span class="badge bg-primary mb-1" style="width: fit-content;">Gesuch</span>
+                        {% else %}
+                            <span class="badge bg-success mb-1" style="width: fit-content;">Angebot</span>
+                        {% endif %}
+                        <h5 class="mb-1">{{ annonce }}</h5>
+                        <small>{{ annonce.date }}</small>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+
+    {% else %} 
+        Keine Treffer
+    {% endif %}
+    
+{% endblock %} 

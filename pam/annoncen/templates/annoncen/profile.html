@@ -1,0 +1,173 @@
+{% extends 'annoncen/base.html' %} 
+
+{% block title %} 
+Home
+{% endblock %} 
+
+{% block content_title %}
+    {% if profil.user == request.user%}
+        Mein Profil
+    {% else %}
+        Profil von {{profil.user.username}}
+    {% endif %}
+{% endblock %}
+
+{% block content %}<center>
+    {% if profil.profilbild %}
+        <img src="{{profil.profilbild.url}}" class="rounded-circle mx-auto d-block" alt="Profil-Bild" style="object-fit: contain; width: 100%; height: auto; max-width: 500px;">
+    {% else %}
+        <div class="container p-5 my-5 bg-secondary text-white d-flex align-items-center justify-content-center rounded-circle bg-info" style="width:300px; height:300px;" alt="Profil-Bild">Profil von {{profil.user.username}}</div>
+    {% endif %}
+    {% if request.user == profil.user %}
+        {% if profil.vorname %}{{profil.vorname}}{% endif %} {% if profil.nachname %}{{profil.nachname}}{% endif %}
+    {% endif %}
+    <br>
+
+    {% if request.user != profil.user and profil.enableChat and not blocked_by %}
+        <p>
+            <a class="btn btn-success" href="{% url 'chat:message_user_create' profil.user %}">
+                {{ profil.user.username }} kontaktieren
+            </a>
+        </p>
+    {% endif %}
+    {% if request.user != profil.user and request.user.is_authenticated %}
+        {% if not blocked %}
+            <p>
+                <a class="btn btn-warning" href="{% url 'annoncen:block' id=profil.user.id %}">
+                    {{ profil.user.username }} blockieren
+                </a>
+            </p>
+        {% else %}
+                <p>
+                    <a class="btn btn-danger" href="{% url 'annoncen:block' id=profil.user.id %}">
+                        Blockieren aufheben
+                    </a>
+                </p>
+        {% endif %}
+    {% endif %}
+    <b>Angemeldet seit:</b><br>
+    {{profil.user.date_joined|date:"d. F. Y" }}<br>
+    <br>
+    {% if not blocked_by %}
+    {% if profil.user == request.user%}
+        <h5>Email:</h5>
+            {{profil.user.email}}
+            <br><br>
+        {% if profil.straße or profil.hausnummer or profil.stadt or profil.postleitzahl or profil.adresszusatz %}
+            <h5>Adresse:</h5>
+            {% if profil.straße %}
+                {{profil.straße}}
+            {% endif%}
+            {% if profil.hausnummer %}
+                {{profil.hausnummer}}
+            {% endif%}
+            <br>
+            {% if profil.stadt %}
+                {{profil.stadt}}
+            {% endif%}
+            {% if profil.postleitzahl %}
+                {{profil.postleitzahl}}
+            {% endif%}
+            <br>
+            {% if profil.adresszusatz %}
+                {{profil.adresszusatz}}
+            {% endif%}
+        <br><br>
+        {% endif %}
+    {% endif %}
+    {% if profil.bio %}
+        <h5>Bio:</h5>
+        {{profil.bio}}
+    {% endif %}
+    <br><br>
+    {% if profil.user == request.user%}
+    <a class="btn btn-outline-dark" href="{% url 'annoncen:profile_settings' user %}">
+        Profil bearbeiten
+    </a>
+    {% endif %}
+    <br><br>
+    {% if hat_annoncen %}
+    <h5>Annoncen von {{profil.user.username}}</h5>
+        <li class="nav-item dropdown">
+            <a class="nav-link nav-link-top dropdown-toggle rounded bg-secondary text-white p-3" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                 Alle Filter
+            </a>
+            <div class="dropdown-menu" >
+                <a class="dropdown-item" href="/profile/{{user.username}}">Alle Annoncen</a>
+                <a class="dropdown-item" href="/profile/{{user.username}}/angebote">Angebote</a>
+                <a class="dropdown-item" href="/profile/{{user.username}}/gesuche">Gesuche</a>
+            </div>
+        </li>
+
+
+        <div class="list-group mt-4" >
+            {% for annonce in annoncen %}
+                <a class="list-group-item list-group-item-action" href="/annonce/{{annonce.id}}">
+
+                    <div class="d-flex justify-content-start">
+                        {% if annonce.bild_set.all %}
+                            {% for image in annonce.bild_set.all %}
+                                {% if image.isCoverImage %}
+                                    <div class="rounded" style="height: 150px; width: 200px; overflow: hidden;">
+                                        <img src="{{image.bild.url}}" height="150">
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                        <div class="d-flex flex-column justify-content-center">
+                            <div class="d-flex justify-content-center align-items-center border rounded" style="height: 150px; width: 200px;">
+                                
+                                    <div>
+                                        Kein Bild
+                                    </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="d-flex flex-column justify-content-center ps-3">
+                            {% if annonce.typ %}
+                                <span class="badge bg-primary mb-1" style="width: fit-content;">Gesuch</span>
+                            {% else %}
+                                <span class="badge bg-success mb-1" style="width: fit-content;">Angebot</span>
+                            {% endif %}
+                            <h5 class="mb-1">{{ annonce }}</h5>
+                            <small>{{ annonce.date }}</small>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% else %}
+        Du wurdest von diesem Nutzer blockiert.
+    {% endif %}
+    <br>
+    {% if profil.user == request.user%}
+        {% if not hat_annoncen %}
+            Du hast keine Annoncen gespeichert.
+        {% endif%}<br>
+        <a class="btn btn-outline-dark" href="{% url 'annoncen:createannonce'%}">
+            Annoncen hinzufügen
+        </a>
+    {% endif %}
+    {% if changedSettings %}
+        <div id="successToast" class="p-3" style="z-index: 11">
+            <div id="toastTest" class="toast hide alert-success" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="10000">
+                <div class="toast-header">
+                <strong class="me-auto">Profil Einstellungen erfolgreich geändert.</strong>
+                <button type="button" class="btn-close toast-close" data-bs-dismiss="toast"></button>
+                </div>
+                <div class="toast-body">
+                </div>
+            </div>
+        </div>
+
+        <script>
+            window.onload = function() {
+            var toastDiv = document.getElementById('toastTest');
+            var toast = new bootstrap.Toast(toastDiv);
+            toast.show(); }
+        </script>
+    {% endif %}</center>
+{% endblock %} 

@@ -1,0 +1,117 @@
+{% extends 'annoncen/base.html' %} 
+{% load i18n %}
+{% load chat_tags %}
+
+{% block title %} 
+    Nachrichten
+{% endblock %}
+
+{% block content_title %} 
+    Nachrichten
+{% endblock %}
+
+{% block content %}
+    {% for thread in threads %}
+        <div class="list-group" style="max-width: 1000px;">
+            <a class="list-group-item list-group-item-action mt-1 {% if thread|unread:user %}bg-warning" style="--bs-bg-opacity: .3" {% endif %}" href="{{thread.get_absolute_url}}">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Thema: {{ thread.subject }}</h5>
+                    <small>{{ thread.latest_message.sent_at}}</small>
+                </div> 
+                <p class="mb-1">Von: {% if thread.users.all.count == 1 %} 
+                                        Nutzer wurde gelöscht
+                                    {% else %}
+                                        {% for u in thread.users.all %}                             
+                                            {% if user != u %}
+                                                {{ u }}
+                                            {% endif %}    
+                                        {% endfor %}
+                                    {% endif %}
+                </p>
+                <small class="text-muted">{{ thread.latest_message.content }}</small>
+            </a>
+        </div>
+    {% empty %}
+        <div class="">Du hast keine Nachrichten.</div>
+    {% endfor %}
+{% endblock content %}
+
+{% block sidebar %}
+
+    {% if expired %} 
+        <div>
+            <h4 style="color:red;">Abgelaufene Annoncen!</h4>
+            <div class="list-group mt-1" >
+                {% for annonce in expired %} 
+                    <div class="list-group-item " >
+                        <div class="d-flex flex-column justify-content-center">
+                            {% if annonce.typ %}
+                                <span class="badge bg-primary mb-1" style="width: fit-content;">Gesuch</span>
+                            {% else %}
+                                <span class="badge bg-success mb-1" style="width: fit-content;">Angebot</span>
+                            {% endif %}
+                            <h5 class="mb-1"><a href="{% url 'annoncen:annonce' annonce.pk %}">{{ annonce }}</a></h5>
+                            <div class="d-flex justify-content-between">
+                                <a class="btn btn-primary btn-sm"href="{% url 'annoncen:extend' annonce.pk %}">Jetzt verlängern</a>
+                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    Annonce löschen
+                                </button>
+                            </div>
+                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Löschen</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                    Soll die Annonce wirklich gelöscht werden?
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                                    <a type="button" class="btn btn-danger " href="{% url 'annoncen:delete' annonce.id %}">Löschen</a>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>  
+        </div>
+    {% endif %}
+{% if pending %}
+        <div>
+            <h4 style="color:green;">Offene Reservierungen!</h4>
+            <div class="list-group mt-1">
+                {% for annonce in pending|slice:":4" %}
+                    <div class="list-group-item " >
+                        <div class="d-flex flex-column justify-content-center">
+                            {% if annonce.typ %}
+                                <span class="badge bg-primary mb-1" style="width: fit-content;">Gesuch</span>
+                            {% else %}
+                                <span class="badge bg-success mb-1" style="width: fit-content;">Angebot</span>
+                            {% endif %}
+                            <h5 class="mb-1"><a href="{% url 'annoncen:annonce' annonce.pk %}">{{ annonce }}</a></h5>
+                            {{annonce.reserviert_von.all.count}} Nutzer möchte(n) die Annonce reservieren.<br>
+                            {% for user in annonce.reserviert_von.all|slice:":1" %}
+                                <br>
+                                <center>{{user}}</center>
+                                <div class="d-flex justify-content-between">
+                                    <a class="btn btn-primary btn-sm"href="{% url 'annoncen:reservieren' annoncen_id=annonce.id user_id=user.id todo='3'%}">Reservierung bestätigen</a>
+                                    <a class="btn btn-danger btn-sm"href="{% url 'annoncen:reservieren' annoncen_id=annonce.id user_id=user.id todo='4'%}">Reservierung zurücknehmen</a>
+                                </div>
+                                {% if user.profile.enableChat %}
+                                    <br><a class="btn btn-success" href="{% url 'chat:message_user_create' user %}">{{user}} kontaktieren</a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="d-flex  flex-column justify-content-center">
+                    <a type="button" class="btn btn-secondary btn-block" href="{% url 'chat:offene_reservierungen' %}">Alle offenen Reservierungen</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

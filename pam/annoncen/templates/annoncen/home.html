@@ -1,0 +1,205 @@
+{% extends 'annoncen/base.html' %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content_title %}
+{% if title %}
+{{title}}
+{% else %}
+Alle Annoncen
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if title != "Deine Reservierungen"%}
+{% if title != "Deine gespeicherten Annoncen"%}
+
+
+<div class="btn-group">
+    Filtern:
+</div>
+<div class="btn-group">
+    <a class="btn btn-secondary btn-sm dropdown-toggle" style="background-color: #01588d ;" data-bs-toggle="dropdown"
+        href="#" role="button" aria-haspopup="true" aria-expanded="false">Alle</a>
+    <div class="dropdown-menu" style="width: 7%;">
+        <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
+            href="/annonce/sortbytitle">Titel A-Z</a>
+        <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
+            href="/annonce/sortbytitlereverse">Titel Z-A</a>    
+        <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
+            href="/annonce/sortbydate">Datum</a>
+        <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
+            href="/annonce/sortbyavailold">Ablaufdatum</a>
+    </div>
+</div>
+<div class="btn-group">
+    <a class="btn btn-secondary btn-sm dropdown-toggle" style="background-color: #01588d ;" data-bs-toggle="dropdown"
+        href="#" role="button" aria-haspopup="true" aria-expanded="false">Angebote</a>
+    <div class="dropdown-menu" style="width: 7%;">
+        <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
+            href="/annonce/a_sortbytitle">Titel A-Z</a>
+        <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
+            href="/annonce/a_sortbytitlereverse">Titel Z-A</a>    
+        <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
+            href="/annonce/a_sortbydate">Datum</a>
+        <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
+            href="/annonce/a_sortbyavailold">Ablaufdatum</a>
+    </div>
+</div>
+<div class="btn-group">
+    <a class="btn btn-secondary btn-sm dropdown-toggle" style="background-color: #01588d ;" data-bs-toggle="dropdown"
+        href="#" role="button" aria-haspopup="true" aria-expanded="false">Gesuche</a>
+    <div class="dropdown-menu" style="width: 7%;">
+        <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
+            href="/annonce/g_sortbytitle">Titel A-Z</a>
+        <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
+            href="/annonce/g_sortbytitlereverse">Titel Z-A</a>
+        <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
+            href="/annonce/g_sortbydate">Datum</a>
+        <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
+            href="/annonce/g_sortbyavailold">Ablaufdatum</a>
+    </div>
+</div>
+{% endif %}
+{% endif %}
+{% if annoncen %}
+
+<div class="list-group mt-4" style="display: grid !important; grid-template-columns: repeat(2, 1fr);">
+    {% for annonce in annoncen %}
+    <a class="list-group-item list-group-item-action d-flex align-items-center" href="/annonce/{{annonce.id}}" style="word-break: break-word;">
+
+        <div class="d-flex justify-content-start align-items-center">
+            {% if annonce.bild_set.all %}
+            {% for image in annonce.bild_set.all %}
+            {% if image.isCoverImage %}
+            <div class="rounded" style="height: 150px; max-width: 250px; overflow: hidden;">
+                <img src="{{image.bild.url}}" height="150">
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% else %}
+                <div class="d-flex justify-content-center align-items-center border rounded"
+                    style="height: 150px; width: 250px;">
+                    <div>
+                        Kein Bild
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="d-flex flex-column justify-content-between ps-3 pt-4 pb-4">
+                {% if annonce.typ %}
+                <span class="badge bg-primary mb-1" style="width: fit-content;">Gesuch</span>
+                {% else %}
+                <span class="badge bg-success mb-1" style="width: fit-content;">Angebot</span>
+                {% endif %}
+                <h5>{{ annonce }}</h5>
+                <small>Ersteller: {{ annonce.author }}</small>
+                <small>Verfügbar bis: {{ annonce.available_until }}</small>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+
+{% else %}
+Keine Annoncen gespeichert.
+{% endif %}
+<br>
+
+
+{% if createdAnnonce %}
+<div id="successToast" class="p-3" style="z-index: 11">
+    <div id="toastTest" class="toast hide alert-success" role="alert" aria-live="assertive" aria-atomic="true"
+        data-bs-animation="true" data-bs-autohide="true" data-bs-delay="10000">
+        <div class="toast-header">
+            <strong class="me-auto">Annonce erfolgreich erstellt</strong>
+            <button type="button" class="btn-close toast-close" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body">
+            <b><a href="{% url 'annoncen:annonce' createdAnnonce.id %}">{{ createdAnnonce.titel }}</a> ansehen.</b>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onload = function () {
+        var toastDiv = document.getElementById('toastTest');
+        var toast = new bootstrap.Toast(toastDiv);
+        toast.show();
+    }
+</script>
+{% endif %}
+
+{% if loggedOut %}
+<div id="successToast" class="p-3" style="z-index: 11">
+    <div id="toastTest" class="toast hide alert-success" role="alert" aria-live="assertive" aria-atomic="true"
+        data-bs-animation="true" data-bs-autohide="true" data-bs-delay="10000">
+        <div class="toast-header">
+            <strong class="me-auto">Erfolgreich ausgelogged.</strong>
+            <button type="button" class="btn-close toast-close" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body">
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onload = function () {
+        var toastDiv = document.getElementById('toastTest');
+        var toast = new bootstrap.Toast(toastDiv);
+        toast.show();
+    }
+</script>
+{% endif %}
+
+{% if deletedName %}
+<div id="successToast" class="p-3" style="z-index: 11">
+    <div style="background-color: rgb(227, 203, 203) !important;" id="toastTest" class="toast hide alert-success"
+        role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true"
+        data-bs-delay="10000">
+        <div class="toast-header">
+            <strong class="me-auto">Löschen erfolgreich</strong>
+            <button type="button" class="btn-close toast-close" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body">
+            <b>{{ deletedName }} wurde erfolgreich gelöscht.</b>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onload = function () {
+        var toastDiv = document.getElementById('toastTest');
+        var toast = new bootstrap.Toast(toastDiv);
+        toast.show();
+    }
+</script>
+{% endif %}
+
+{% if deletedUser %}
+<div id="successToast" class="p-3" style="z-index: 11">
+    <div style="background-color: rgb(227, 203, 203) !important;" id="toastTest" class="toast hide alert-success"
+        role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true"
+        data-bs-delay="10000">
+        <div class="toast-header">
+            <strong class="me-auto">Löschen erfolgreich</strong>
+            <button type="button" class="btn-close toast-close" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body">
+            <b>{{ deletedUser }} wurde erfolgreich gelöscht.</b>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onload = function () {
+        var toastDiv = document.getElementById('toastTest');
+        var toast = new bootstrap.Toast(toastDiv);
+        toast.show();
+    }
+</script>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'annoncen/base.html' %} 
+
+{% block title %} 
+    Kategorie: {{cats}}
+{% endblock %} 
+
+{% block content_title %}
+    Kategorie: {{cats}}
+{% endblock %}
+
+{% block content %}
+    {% if annoncen_kategorie %}
+        <div class="list-group mt-4" style="display: grid !important; grid-template-columns: repeat(2, 1fr);">
+            {% for annonce in annoncen_kategorie %}
+                <a class="list-group-item list-group-item-action" href="/annonce/{{annonce.id}}" style="word-break: break-word;">
+
+                    <div class="d-flex justify-content-start">
+                        {% if annonce.bild_set.all %}
+                            {% for image in annonce.bild_set.all %}
+                                {% if image.isCoverImage %}
+                                    <div class="rounded" style="height: 150px; width: 200px; overflow: hidden;">
+                                        <img src="{{image.bild.url}}" height="150">
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                        <div class="d-flex flex-column justify-content-center">
+                            <div class="d-flex justify-content-center align-items-center border rounded" style="height: 150px; width: 200px;">
+                                
+                                    <div>
+                                        Kein Bild
+                                    </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="d-flex flex-column justify-content-center ps-3">
+                            {% if annonce.typ %}
+                                <span class="badge bg-primary mb-1" style="width: fit-content;">Gesuch</span>
+                            {% else %}
+                                <span class="badge bg-success mb-1" style="width: fit-content;">Angebot</span>
+                            {% endif %}
+                            <h5 class="mb-1">{{ annonce }}</h5>
+                            <small>{{ annonce.date }}</small>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+
+    {% else %} 
+        Keine Annoncen gespeichert.
+    {% endif %}
+    <br>
+{% endblock %} 

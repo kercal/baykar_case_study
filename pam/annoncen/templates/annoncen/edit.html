@@ -1,0 +1,31 @@
+{% extends 'annoncen/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Annonce Bearbeiten
+{% endblock title%}
+
+{% block content_title %}
+Annonce Bearbeiten
+{% endblock %}
+
+{% block content %}
+<form method="post" class="my-class">
+    {% csrf_token %}
+    {{ form.typ|as_crispy_field}}
+    {{ form.titel|as_crispy_field }}
+    {{ form.straße|as_crispy_field }}
+    {{ form.hausnummer|as_crispy_field }}
+    {{ form.stadt|as_crispy_field }}
+    {{ form.postleitzahl|as_crispy_field }}
+    {{ form.adresszusatz|as_crispy_field }}
+    {{ form.kontakt|as_crispy_field }}
+    {{ form.beschreibung|as_crispy_field }}
+    {{ form.nachricht|as_crispy_field }}
+    {{ form.width|as_crispy_field }}
+    {{ form.height|as_crispy_field }}
+    {{ form.length|as_crispy_field }}
+    <button type="submit" class="btn btn-primary">Speichern</button>
+</form>
+
+{% endblock content %} 

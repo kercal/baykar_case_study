@@ -1,0 +1,61 @@
+{% extends 'annoncen/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Profil Einstellungen
+{% endblock title%}
+
+{% block content_title %}
+Profil Einstellungen
+{% endblock %}
+
+{% block content %}
+<form method="POST" class="profile-form" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.bio | as_crispy_field }}
+    {{ form.bild_1 | as_crispy_field }}
+    <p>Hinterlege hier deine Adresse. Diese kannst du dann beim Erstellen neuer Annoncen benutzen.<br>
+        Deine Adresse ist <span style="color: red;">nicht</span> öffentlich in deinem Profil einsehbar!</p>
+    <div style="max-width: 800px;">  
+        <div class="row">
+            {{ form.vorname | as_crispy_field }}
+            {{ form.nachname | as_crispy_field }}
+            <div class="col-sm-7">
+                {{ form.straße | as_crispy_field }}
+            </div>
+            <div class="col-sm">
+                {{ form.hausnummer | as_crispy_field }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-7">
+                {{ form.stadt | as_crispy_field }}
+            </div>
+            <div class="col-sm">
+                <div id="div_id_postleitzahl" class="mb-3">
+                    <label for="id_postleitzahl" class="form-label">
+                        Postleitzahl:
+                    </label>
+                    <input type="number" name="postleitzahl" value="{{ user.profile.postleitzahl }}" class="numberinput form-control no-spin" id="id_postleitzahl">
+                </div>
+            </div>
+        </div>
+        {{ form.adresszusatz | as_crispy_field }}
+    </div>  
+    <div class="mb-3"> 
+        <div id="div_id_enableChat" class="mb-3"> 
+            <input type="checkbox" name="enableChat" {% if profile.enableChat %} checked {% endif %} class="checkboxinput form-check-input" id="id_public"> 
+            <label for="id_enableChat" class="form-check-label">
+                Chat aktivieren?
+            </label> 
+            <small id="hint_id_enableChat" class="form-text text-muted">
+                Soll man dir Nachrichten schicken können?
+            </small> 
+        </div>
+    </div>
+    {{ form.searchRadius | as_crispy_field }}
+    <button type="submit" class="btn btn-primary">Speichern</button>
+</form>
+<br>
+<a href="/delete_u/{{ user.id }}"><div class="btn btn-danger">Account löschen</div></a>
+{% endblock content %} 

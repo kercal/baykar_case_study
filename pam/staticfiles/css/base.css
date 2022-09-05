@@ -1,0 +1,158 @@
+.btn-success, .bg-success {
+    background-color: rgb(1, 147, 119) !important;
+}
+
+#Search::-webkit-search-cancel-button{
+    position:relative;
+    right:20px;  
+}
+
+.no-spin::-webkit-inner-spin-button, .no-spin::-webkit-outer-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+}
+
+.no-spin {
+    -moz-appearance:textfield !important;
+}
+
+.baseWrap {
+    flex-wrap: nowrap;
+}
+
+.sides {
+    flex-basis: 300px;
+    flex-grow: 1;
+    flex-shrink: 5;
+}
+
+.righttbar {
+    padding: 1rem;
+}
+
+.righttbar > * {
+    padding: 6px 6px 0px 6px;
+    margin-bottom: 14px;
+}
+
+#miniMap {
+    margin: 6px 0px 0px 6px;
+}
+
+#miniMap a {
+    background-color: var(--bs-btn-bg);
+}
+
+#header {
+    margin-top: 12px;
+}
+
+#content, #header {
+    flex-basis:  800px;
+    flex-grow: 2;
+    background-color: white;
+}
+
+body {
+    background-color: #e4e8eb !important;
+}
+
+.navbar {
+    background-color: #01588d;
+    --bs-navbar-padding-y: 0px !important;
+    height: 55px;
+}
+
+.nav-link {
+    display: flex !important;
+    align-items: center;
+    color:white !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    vertical-align: middle;
+}
+
+#navbarCollapse, .navbar-nav, .nav-link {
+    height: 100%;
+}
+
+.nav-link-top:hover {
+    background-color: white;
+    color: #01588d !important;
+}
+
+.navbarWrap {
+    height: 100%;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.dropdown-menu.show {
+    display: flex !important;
+    flex-wrap: wrap;
+    height: auto;
+    background-color: white;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+}
+
+.dd-item {
+    color: black;
+    text-decoration: none;
+    width: 100%;
+    padding-right: var(--bs-navbar-nav-link-padding-x);
+    padding-left: var(--bs-navbar-nav-link-padding-x); 
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.dd-item:hover {
+    background-color: #e4e8eb;
+    color:black;
+}
+
+.list-group-item {
+    border: 0px solid black !important;
+    /* border-top: 1px solid #e4e8eb !important; */
+    border-radius:0% !important;
+}
+
+.list-group-item:last-child {
+    /* border-bottom: 1px solid #e4e8eb !important; */
+}
+
+#searchForm {
+    padding: 5px 0px;
+}
+
+#successToast {
+    position: absolute;
+    right: 0px;
+    top: 60px;
+    
+}
+
+#successToast > div {
+    background-color: rgb(203, 227, 216) !important;
+}
+
+@media only screen and (max-width: 850px) {
+    .baseWrap {
+        flex-wrap: wrap;
+    }
+
+    #headerRightbar{
+        padding: 0px;
+    }
+
+    #navbarCollapse, .navbar-nav {
+        height: fit-content;
+    }
+
+    .nav-link, #searchForm {
+        
+    }
+  }

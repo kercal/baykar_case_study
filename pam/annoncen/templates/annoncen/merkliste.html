@@ -1,0 +1,67 @@
+{% extends 'annoncen/base.html' %}
+
+
+{% block title %}
+Deine gespeicherten Annoncen
+{% endblock title%}
+
+{% block content_title %}
+Deine gespeicherten Annoncen
+{% endblock %}
+
+ {% block content %}   
+<div class="list-group mt-4" >
+    {% for annonce in annoncen %}
+        <a class="list-group-item list-group-item-action" href="/annonce/{{annonce.id}}">
+
+            <div class="d-flex justify-content-start">
+                {% if annonce.bild_set.all %}
+                    {% for image in annonce.bild_set.all %}
+                        {% if image.isCoverImage %}
+                            <div class="rounded" style="height: 150px; width: 200px; overflow: hidden;">
+                                <img src="{{image.bild.url}}" height="150">
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                <div class="d-flex flex-column justify-content-center">
+                    <div class="d-flex justify-content-center align-items-center border rounded" style="height: 150px; width: 200px;">
+                        
+                            <div>
+                                Kein Bild
+                            </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="d-flex flex-column justify-content-between ps-3 pt-4 pb-4">
+                    {% if annonce.typ %}
+                        <span class="badge bg-primary mb-1" style="width: fit-content;">Gesuch</span>
+                    {% else %}
+                        <span class="badge bg-success mb-1" style="width: fit-content;">Angebot</span>
+                    {% endif %}
+                    <h5>{{ annonce }}</h5>
+                    <small>{{ annonce.date }}</small>
+                </div>
+            </div>
+        </a>
+        {% if request.user.is_authenticated %}
+{% if annonce.gemerkt == 1 or not hat_gemerkt %}
+    <p>
+        <a class="btn btn-dark" href="{% url 'annoncen:merken' annoncen_id=annonce.id user_id=request.user.id todo='0' %}">
+            Von der Merkliste löschen
+        </a>
+    </p>
+{% elif hat_gemerkt or annonce.gemerkt == 0 %}
+    <p>
+        <a class="btn btn-outline-dark" href="{% url 'annoncen:merken' annoncen_id=annonce.id user_id=request.user.id todo='1'%}">
+            Von der Merkliste löschen
+        </a>
+    </p>
+{% endif %}
+{% endif %}
+<br>
+    {% endfor %}
+
+</div>
+{% endblock content %}

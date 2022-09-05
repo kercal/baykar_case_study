@@ -1,0 +1,188 @@
+{% extends 'annoncen/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Annonce Erstellen
+{% endblock title%}
+
+{% block content_title %}
+Neue Annonce
+{% endblock %}
+
+{% block content %}
+<form method="POST" class="annonce-form" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.titel | as_crispy_field }}
+    {{ form.typ | as_crispy_field }}
+    {{ form.beschreibung | as_crispy_field }}
+    {{ form.kontakt | as_crispy_field }}
+    <p>
+        <a class=" btn btn-success dropdown-toggle" data-bs-toggle="collapse" href="#bilder" role="button" aria-expanded="false" aria-controls="bilder">
+            Bilder hinzufügen (optional)
+        </a>
+    </p>
+    <div class="collapse mb-3" id="bilder">
+        <div class="card card-body">
+            <div class="ps-4">
+                {{ form.bild_1 | as_crispy_field }}
+                {{ form.bild_2 | as_crispy_field }}
+                {{ form.bild_3 | as_crispy_field }}
+            </div>
+        </div>
+    </div>  
+    <p>
+        <a class="btn btn-success dropdown-toggle" data-bs-toggle="collapse" href="#maße" role="button" aria-expanded="true" aria-controls="maße">
+            Maße hinzufügen (optional)
+        </a>
+    </p>
+    <div class="collapse mb-3 {% if form.errors %}
+                                {% if form.errors.width or form.errors.length or form.errors.height %}
+                                    show
+                                {% endif %}
+                                {% endif %}" 
+                                id="maße">
+        <div class="card card-body">
+            <div class="ps-4">
+                {{ form.height | as_crispy_field}}
+                {{ form.length | as_crispy_field}}
+                {{ form.width  | as_crispy_field}}
+            </div>
+        </div>
+    </div>   
+    
+    <p>
+        <a class=" btn btn-success dropdown-toggle" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+            Kategorien hinzufügen:
+        </a>
+    </p>
+    <div class="collapse mb-3" id="collapseExample">
+        <div class="card card-body">
+            {{ form.kategorie | as_crispy_field }}       
+        </div>
+    </div>
+    <p>
+        <a class=" btn btn-success dropdown-toggle" data-bs-toggle="collapse" href="#until" role="button" aria-expanded="false" aria-controls="until">
+            Verfügbar bis (optional)
+        </a>
+    </p>
+    <div class="collapse mb-3 {% if form.errors %}
+                                {% if form.errors.available_until %}
+                                    show
+                                {% endif %}
+                                {% endif %}" 
+                                id="until">
+        <div class="card card-body">
+            {{ form.available_until | as_crispy_field }}
+        </div>
+    </div>
+
+    {% if address_is_set %}
+    <p>
+        <a class=" btn btn-success dropdown-toggle" data-bs-toggle="collapse" href="#address" role="button" aria-expanded="false" aria-controls="address">
+            Adresse
+        </a>
+    </p>
+    <div class="collapse mb-3" id="address">
+        <div class="card card-body">
+            <div class="ms-4 mb-3">
+                <div>
+                    <input type="radio" name="address" value="default_address"
+                        checked>
+                        <label>Nutze die gespeicherte Adresse:</label>
+                    <div class="ms-4 mt-2 mb-4">
+                        {% if user.profile.straße %}
+                            {{ user.profile.straße }}  
+                        {% endif %}
+                        {% if user.profile.hausnummer %}
+                            {{ user.profile.hausnummer }}<br> 
+                        {% endif %}
+                        {% if user.profile.postleitzahl %}
+                            {{ user.profile.postleitzahl }}  
+                        {% endif %}
+                        {% if user.profile.stadt %}
+                            {{ user.profile.stadt }}
+                        {% endif %}
+                        {% if user.profile.adresszusatz %}
+                        <br>{{ user.profile.adresszusatz }}
+                        {% endif %}
+                    </div>
+                </div>
+            
+                <div>
+                    <input type="radio" name="address" value="custom_address">
+                    <label class="mb-3">Lege eine andere Adresse fest:</label>
+                    <div class="row">
+                        <div class="col-sm-7">
+                            {{ form.straße | as_crispy_field }}
+                        </div>
+                        <div class="col-sm">
+                            {{ form.hausnummer | as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-7">
+                            {{ form.stadt | as_crispy_field }}
+                        </div>
+                        <div class="col-sm">
+                            <div id="div_id_postleitzahl" class="mb-3">
+                                <label for="id_postleitzahl" class="form-label">
+                                    Postleitzahl (optional):
+                                </label>                                    
+                                <input type="number" name="postleitzahl" class="numberinput form-control no-spin" id="id_postleitzahl">
+                            </div> 
+                        </div>
+                    </div>
+                    {{ form.adresszusatz | as_crispy_field }}
+                </div>
+                <input type="radio" name="address" value="no_address">
+                <label>Keine Adresse in Annonce angeben</label>
+            </div>
+        </div>
+    </div>
+    {% else %}
+        <p>
+            <a class=" btn btn-success dropdown-toggle" data-bs-toggle="collapse" href="#address" role="button" aria-expanded="false" aria-controls="address">
+                Adresse
+            </a>
+        </p>
+        <div class="collapse mb-3" id="address">
+            <div class="card card-body">
+                <div class="row">
+                    <div class="col-sm-7">
+                        {{ form.straße | as_crispy_field }}
+                    </div>
+                    <div class="col-sm">
+                        {{ form.hausnummer | as_crispy_field }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-7">
+                        {{ form.stadt | as_crispy_field }}
+                    </div>
+                    <div class="col-sm">
+                        <div id="div_id_postleitzahl" class="mb-3">
+                            <label for="id_postleitzahl" class="form-label">
+                                Postleitzahl (optional):
+                            </label>                                    
+                            <input type="number" name="postleitzahl" class="numberinput form-control no-spin" id="id_postleitzahl">
+                        </div> 
+                    </div>
+                </div>
+                {{ form.adresszusatz | as_crispy_field }}
+            </div>
+        </div>
+    {% endif %}
+
+    <p>
+        <a class=" btn btn-success dropdown-toggle" data-bs-toggle="collapse" href="#msg" role="button" aria-expanded="false" aria-controls="msg">
+            Zusätzliche Informationen hinzufügen (optional)
+        </a>
+    </p>
+    <div class="collapse " id="msg">
+        <div class="">
+            {{ form.nachricht | as_crispy_field }}
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Annonce veröffentlichen</button>
+</form>
+{% endblock content %} 

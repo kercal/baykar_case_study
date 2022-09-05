@@ -1,0 +1,7 @@
+.list_group { 
+    max-width: 400px;
+}
+
+.righttbar {
+    flex-shrink: 0 !important;
+}

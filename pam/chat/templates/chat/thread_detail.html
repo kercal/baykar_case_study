@@ -1,0 +1,73 @@
+{% extends 'annoncen/base.html' %} 
+{% load crispy_forms_tags %}
+
+{% block title %}
+Chat
+{% endblock %}
+
+{% block content_title %}
+Thema: {{ thread.subject }}
+{% endblock %}
+
+{% block content %}
+    <div class="mt-2" style="max-width: 1000px;">
+        {% for message in thread.messages.all %}
+            <div>
+                <div style="width: fit-content;
+                {% if message.sender == user %}
+                    margin-left: auto;
+                {% endif %}">
+                    <div class="">
+                        {% if message.sender %}
+                            {% if message.sender.username == 'System' %}
+                                {{ message.sender }}:
+                            {% elif message.sender != user %}
+                            <a class="link-dark" href="{% url 'annoncen:profile' message.sender %}"
+                            style="padding-left: 5px;">
+                                {{ message.sender }}:
+                            </a>
+
+                            {% endif %}
+                        {% else %}
+                            Nutzer wurde gelöscht
+                        {% endif %}
+                    </div>
+                    <div class="p-2 border border-primary bg-primary text-white border-2 rounded">
+                        <div class="mt-2 msg_wrap" style="overflow-wrap: break-word;
+                                            max-width: 500px;">
+                            {{ message.content|urlize|linebreaks }}
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end;">
+                        <small class="form-text text-muted">({{ message.sent_at }})</small>
+                    </div>
+                </div>
+            </div>    
+        {% endfor %}
+
+        {% if chatOpen %}
+            {% if thread.messages.first.sender.username == 'System' %}
+                <div class="mt-4">
+                    Die System-Nachrichten werden automatisch versendet. Du kannst hierauf nicht antworten.
+                </div>
+            {% elif blocked %}
+                <div class="mt-4">
+                    Dieser Nutzer hat dich geblockt. Du kannst keine Nachrichten an ihn versenden.
+                </div>
+            {% else %}
+                <form class="mt-4" action="{% url 'chat:thread_detail' thread.pk %}" method="post">
+                    {% csrf_token %}
+                    {{ form| crispy }}
+                    <div class="" style="display: flex; justify-content: flex-end">
+                        <a href="{% url 'chat:inbox' %}" class="btn btn-light">Abbrechen</a>
+                        <button class="btn btn-primary">Senden</button>
+                    </div>
+                </form>
+            {% endif %}
+        {% else %}
+        <div class="mt-4">
+            Du kannst keine Nachrichten senden, da die Einstellungen des Empfängers dies verhindern.
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}
