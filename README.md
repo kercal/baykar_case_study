@@ -7,6 +7,7 @@ These are the windows commands, it can be a bit different with Mac and Linux.
 1. Clone git repo to PC:
     ```
     git clone https://github.com/kercal/baykar_case_study
+    cd baykar_case_study
     cd pam
     ```
 2. Install the actual Python version: https://www.python.org/downloads/
