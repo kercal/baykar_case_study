@@ -14,7 +14,7 @@ These are the windows commands, it can be a bit different with Mac and Linux.
 
 
     python --version
-    ```
+
     
 
 4. Create a Virtual Environment. All Python packages that we need for our project are stored in this folder:
