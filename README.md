@@ -6,8 +6,7 @@ These are the windows commands, it can be a bit different with Mac and Linux.
 
 1. Clone git repo to PC:
     ```
-    git clone https://git.cs.uni-kl.de/agile-methoden-2/ss22/team/pam-ii.git
-    cd Baykar - Case Study
+    git clone https://github.com/kercal/baykar_case_study
     cd pam
     ```
 2. Install the actual Python version: https://www.python.org/downloads/
