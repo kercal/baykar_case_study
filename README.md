@@ -82,7 +82,8 @@ python manage.py createsuperuser
 
 Remarks:
 
--Since I wasn't expecting a case study right after the day I applied, I noticed it a bit late so in reality I had a lot less time than 3 days.
--I used some code snippets from one of **_My Own_** personal projects that was quite similar to the case study, I didn't use any template or code from the internet, so that's why some of the codes are in German or extra, I wanted to refactor it but with little time that was the best I could do.
--Instead of Postgresql, I used the default sqlite database but it can be converted very easily.
--For some reason there is a bug with usernames. When somebody publishes a post, the username is shown as None so I can't link it to the profile. I'm pretty sure this can also be fixed quickly.
+-Since I wasn't expecting a case study right after the day I applied, I noticed it a bit late, so in reality I had a lot less time than 3 days.  <br>
+-I used some code snippets from one of **_My Own_** personal projects that was quite similar to the case study, I didn't use any template or code from the internet, so that's why some of the codes are in German or extra, I wanted to refactor it but with little time that was the best I could do.  <br>
+-Instead of Postgresql, I used the default sqlite database but it can be converted easily.  <br>
+-For some reason there is a bug with usernames. When somebody publishes a post, the username is shown as None so I can't link it to the profile. I'm pretty sure this can also be fixed quickly.  <br>
+-There is a minor bug with weight form of the UAV.
