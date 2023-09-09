@@ -28,14 +28,13 @@ SECRET_KEY = 'django-insecure-5lvp9w76!lky3v5l3y@6lw0!*-@hvn)o80h67s7&r3et^j_m21
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost','127.0.0.1']
 
 # Application definition
 
 INSTALLED_APPS = [
     'annoncen.apps.AnnoncenConfig',
     'chat.apps.ChatConfig',
-    'maps.apps.MapsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -129,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'de-de'
+LANGUAGE_CODE = 'en-en'
 
 TIME_ZONE = 'Europe/Berlin'
 

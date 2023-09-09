@@ -1,9 +1,9 @@
 {% extends 'annoncen/base.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}Registrieren{% endblock %}
+{% block title %}Register{% endblock %}
 
-{% block content_title %}Registrieren{% endblock %}
+{% block content_title %}Register{% endblock %}
 
 {% block content %}
 <form method="post" style="max-width: 500px;">
@@ -17,6 +17,6 @@
     <input type="text" name="username" placeholder="Name" autocomplete="username" minlength="1" maxlength="150" class="textinput textInput form-control" required id="id_username"> </div>
     {{ form.password1 | as_crispy_field }}
     {{ form.password2 | as_crispy_field }}
-  <button class="btn btn-primary" type="submit">Registrieren</button>
+  <button class="btn btn-primary" type="submit">Register</button>
 </form>
 {% endblock %}

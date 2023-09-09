@@ -18,7 +18,7 @@
     {% if annonce.typ %}
         Ich suche:
     {% else %}
-        Ich biete:
+        For Rent:
     {% endif %}
     {{ annonce.titel}}
 {% endblock %}
@@ -27,13 +27,13 @@
     
         <div id="annonceWrap" class="border rounded p-4 shadow mb-4">
             <p>
-                <b>Ersteller:</b> <br> 
+                <b>Publisher:</b> <br> 
                 <a href="{% url 'annoncen:profile' annonce.author %}">{{annonce.author}}</a>
             </p>
             {% if user != annonce.author and annonce.author.profile.enableChat %}
                 <p>
                     <a class="btn btn-success" href="{% url 'chat:message_user_create' annonce.author.username %}">
-                        Ersteller kontaktieren
+                        Contact Publisher
                     </a>
                 </p>
             {% endif %}
@@ -68,22 +68,23 @@
                 <br>
                 
                 <div style="text-align:center">
-                {% for image in annonce.bild_set.all %} 
-                    <span class="dot" onclick="currentSlide({{ forloop.counter }})"></span>
-                {% endfor %}
+                    {% for image in annonce.bild_set.all %} 
+                        <span class="dot" onclick="currentSlide('{{ forloop.counter }}')"></span>
+                    {% endfor %}
                 </div>
+                
             {% endif %}
             
             {% if annonce.height %}
                 <p>
-                    <b> Maße:</b> <br>
-                    Höhe: {{annonce.height}} cm, Länge: {{annonce.length}} cm, Breite: {{annonce.width }} cm
+                    <b> Measurements:</b> <br>
+                    Height: {{annonce.height}} cm, Length: {{annonce.length}} cm, Width: {{annonce.width }} cm, Weight: {{annonce.weight}} kgs
                 </p>
             {% endif %}
 
             {% if annonce.available_until %}
                 <p>
-                    <b>Verfügbar bis:</b><br>
+                    <b>Available Until:</b><br>
                     {{ annonce.available_until}}
                     {% if annonce.author == request.user %}
                         <br>
@@ -94,7 +95,7 @@
 
             
             <p>
-                <b>Beschreibung:</b><br>
+                <b>Description:</b><br>
                 {{annonce.beschreibung}}
             </p>
 
@@ -108,16 +109,16 @@
 
             {% if annonce.nachricht %}
                 <p>
-                    <b>zusätzliche Informationen:</b><br>
+                    <b>Additional Info:</b><br>
                     {{annonce.nachricht}}<br>
                 </p>
             {% endif %}
             <p>
-                <b>gepostet am:</b> <br>
+                <b>Posted On:</b> <br>
                 {{annonce.date|date}}
                 </p>
             <p>
-                <b>Kontakt:</b><br>
+                <b>Contact:</b><br>
                 {% if annonce.name %}
                     {{annonce.name}}
                 {% endif %}
@@ -143,13 +144,13 @@
                 {% if annonce.reserviert == 0 or not hat_reserviert %}
                     <p>
                         <a class="btn btn-warning" href="{% url 'annoncen:reservieren' annoncen_id=annonce.id user_id=request.user.id todo='1' %}">
-                            Reservieren
+                            Reserve it!
                         </a>
                     </p>
                 {% elif hat_reserviert or annonce.reserviert == 2 and annonce.author == request.user %}
                     <p>
                         <a class="btn btn-danger" href="{% url 'annoncen:reservieren' annoncen_id=annonce.id user_id=request.user.id todo='0'%}">
-                            Nicht mehr reservieren
+                            Don't Reserve Anymore
                         </a>
                     </p>
                 {% endif %}
@@ -190,13 +191,13 @@
 {% if annonce.gemerkt == 0 or not hat_gemerkt %}
     <p>
         <a class="btn btn-dark" href="{% url 'annoncen:merken' annoncen_id=annonce.id user_id=request.user.id todo='1' %}">
-            Zur Merkliste hinzufügen
+            Add To Bookmarks
         </a>
     </p>
 {% elif hat_gemerkt or annonce.gemerkt == 1 %}
     <p>
         <a class="btn btn-outline-dark" href="{% url 'annoncen:merken' annoncen_id=annonce.id user_id=request.user.id todo='0'%}">
-            Von der Merkliste löschen
+            Delete From Bookmarks
         </a>
     </p>
 {% endif %}
@@ -206,7 +207,7 @@
         <div > 
             {% if three_newest_annonce_with_same_author %}
                 <div>
-                    <h5>Gleicher Ersteller</h5>
+                    <h5>From The Same User:</h5>
                     <div class="list-group mt-1">
                         {% for annonce in three_newest_annonce_with_same_author %}
                             <a class="list-group-item list-group-item-action" href="/annonce/{{annonce.id}}">
@@ -214,7 +215,7 @@
                                     {% if annonce.typ %}
                                         <span class="badge bg-primary mb-1" style="width: fit-content;">Gesuch</span>
                                     {% else %}
-                                        <span class="badge bg-success mb-1" style="width: fit-content;">Angebot</span>
+                                        <span class="badge bg-success mb-1" style="width: fit-content;">Offer</span>
                                     {% endif %}
                                     <h5 class="mb-1">{{ annonce }}</h5>
                                     <small>{{ annonce.date|date }}</small>
@@ -256,7 +257,7 @@
                                     {% if annonce.typ %}
                                         <span class="badge bg-primary mb-1" style="width: fit-content;">Gesuch</span>
                                     {% else %}
-                                        <span class="badge bg-success mb-1" style="width: fit-content;">Angebot</span>
+                                        <span class="badge bg-success mb-1" style="width: fit-content;">Offer</span>
                                     {% endif %}
                                     <h5 class="mb-1">{{ annonce.titel }}</h5>
                                     <small>{{ annonce.date|date }}</small>

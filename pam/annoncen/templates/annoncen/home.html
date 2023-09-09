@@ -8,7 +8,7 @@ Home
 {% if title %}
 {{title}}
 {% else %}
-Alle Annoncen
+All Posts
 {% endif %}
 {% endblock %}
 
@@ -18,50 +18,23 @@ Alle Annoncen
 
 
 <div class="btn-group">
-    Filtern:
+    Filters:
 </div>
 <div class="btn-group">
     <a class="btn btn-secondary btn-sm dropdown-toggle" style="background-color: #01588d ;" data-bs-toggle="dropdown"
-        href="#" role="button" aria-haspopup="true" aria-expanded="false">Alle</a>
+        href="#" role="button" aria-haspopup="true" aria-expanded="false">All</a>
     <div class="dropdown-menu" style="width: 7%;">
         <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
-            href="/annonce/sortbytitle">Titel A-Z</a>
+            href="/annonce/sortbytitle">Title A-Z</a>
         <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
-            href="/annonce/sortbytitlereverse">Titel Z-A</a>    
+            href="/annonce/sortbytitlereverse">Title Z-A</a>    
         <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
-            href="/annonce/sortbydate">Datum</a>
+            href="/annonce/sortbydate">Date</a>
         <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
-            href="/annonce/sortbyavailold">Ablaufdatum</a>
+            href="/annonce/sortbyavailold">Expiry Date</a>
     </div>
 </div>
-<div class="btn-group">
-    <a class="btn btn-secondary btn-sm dropdown-toggle" style="background-color: #01588d ;" data-bs-toggle="dropdown"
-        href="#" role="button" aria-haspopup="true" aria-expanded="false">Angebote</a>
-    <div class="dropdown-menu" style="width: 7%;">
-        <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
-            href="/annonce/a_sortbytitle">Titel A-Z</a>
-        <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
-            href="/annonce/a_sortbytitlereverse">Titel Z-A</a>    
-        <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
-            href="/annonce/a_sortbydate">Datum</a>
-        <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
-            href="/annonce/a_sortbyavailold">Ablaufdatum</a>
-    </div>
-</div>
-<div class="btn-group">
-    <a class="btn btn-secondary btn-sm dropdown-toggle" style="background-color: #01588d ;" data-bs-toggle="dropdown"
-        href="#" role="button" aria-haspopup="true" aria-expanded="false">Gesuche</a>
-    <div class="dropdown-menu" style="width: 7%;">
-        <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
-            href="/annonce/g_sortbytitle">Titel A-Z</a>
-        <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
-            href="/annonce/g_sortbytitlereverse">Titel Z-A</a>
-        <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
-            href="/annonce/g_sortbydate">Datum</a>
-        <a class="dd-item" style="padding-top: 2px;padding-bottom: 2px; padding-left: 10px;"
-            href="/annonce/g_sortbyavailold">Ablaufdatum</a>
-    </div>
-</div>
+
 {% endif %}
 {% endif %}
 {% if annoncen %}
@@ -83,20 +56,20 @@ Alle Annoncen
                 <div class="d-flex justify-content-center align-items-center border rounded"
                     style="height: 150px; width: 250px;">
                     <div>
-                        Kein Bild
+                        No Picture
                     </div>
                 </div>
             {% endif %}
 
             <div class="d-flex flex-column justify-content-between ps-3 pt-4 pb-4">
                 {% if annonce.typ %}
-                <span class="badge bg-primary mb-1" style="width: fit-content;">Gesuch</span>
+                <span class="badge bg-primary mb-1" style="width: fit-content;">Search</span>
                 {% else %}
-                <span class="badge bg-success mb-1" style="width: fit-content;">Angebot</span>
+                <span class="badge bg-success mb-1" style="width: fit-content;">Offer</span>
                 {% endif %}
                 <h5>{{ annonce }}</h5>
-                <small>Ersteller: {{ annonce.author }}</small>
-                <small>Verfügbar bis: {{ annonce.available_until }}</small>
+                <small>Publisher: {{ annonce.author }}</small>
+                <small>Available Until: {{ annonce.available_until }}</small>
             </div>
         </div>
     </a>
@@ -104,7 +77,7 @@ Alle Annoncen
 </div>
 
 {% else %}
-Keine Annoncen gespeichert.
+No saved posts to show.
 {% endif %}
 <br>
 
@@ -114,11 +87,11 @@ Keine Annoncen gespeichert.
     <div id="toastTest" class="toast hide alert-success" role="alert" aria-live="assertive" aria-atomic="true"
         data-bs-animation="true" data-bs-autohide="true" data-bs-delay="10000">
         <div class="toast-header">
-            <strong class="me-auto">Annonce erfolgreich erstellt</strong>
+            <strong class="me-auto">Post successfully published</strong>
             <button type="button" class="btn-close toast-close" data-bs-dismiss="toast"></button>
         </div>
         <div class="toast-body">
-            <b><a href="{% url 'annoncen:annonce' createdAnnonce.id %}">{{ createdAnnonce.titel }}</a> ansehen.</b>
+            <b><a href="{% url 'annoncen:annonce' createdAnnonce.id %}">{{ createdAnnonce.titel }}</a> offer is published.</b>
         </div>
     </div>
 </div>
@@ -137,7 +110,7 @@ Keine Annoncen gespeichert.
     <div id="toastTest" class="toast hide alert-success" role="alert" aria-live="assertive" aria-atomic="true"
         data-bs-animation="true" data-bs-autohide="true" data-bs-delay="10000">
         <div class="toast-header">
-            <strong class="me-auto">Erfolgreich ausgelogged.</strong>
+            <strong class="me-auto">Successfully logged off.</strong>
             <button type="button" class="btn-close toast-close" data-bs-dismiss="toast"></button>
         </div>
         <div class="toast-body">
@@ -160,11 +133,11 @@ Keine Annoncen gespeichert.
         role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true"
         data-bs-delay="10000">
         <div class="toast-header">
-            <strong class="me-auto">Löschen erfolgreich</strong>
+            <strong class="me-auto">Deletion successful</strong>
             <button type="button" class="btn-close toast-close" data-bs-dismiss="toast"></button>
         </div>
         <div class="toast-body">
-            <b>{{ deletedName }} wurde erfolgreich gelöscht.</b>
+            <b>{{ deletedName }} is successfully deleted.</b>
         </div>
     </div>
 </div>
@@ -184,11 +157,11 @@ Keine Annoncen gespeichert.
         role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true"
         data-bs-delay="10000">
         <div class="toast-header">
-            <strong class="me-auto">Löschen erfolgreich</strong>
+            <strong class="me-auto">Successfully deleted</strong>
             <button type="button" class="btn-close toast-close" data-bs-dismiss="toast"></button>
         </div>
         <div class="toast-body">
-            <b>{{ deletedUser }} wurde erfolgreich gelöscht.</b>
+            <b>{{ deletedUser }} is successfully deleted.</b>
         </div>
     </div>
 </div>

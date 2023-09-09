@@ -3,11 +3,11 @@
 {% load chat_tags %}
 
 {% block title %} 
-    Nachrichten
+    Messages
 {% endblock %}
 
 {% block content_title %} 
-    Nachrichten
+    Messages
 {% endblock %}
 
 {% block content %}
@@ -32,7 +32,7 @@
             </a>
         </div>
     {% empty %}
-        <div class="">Du hast keine Nachrichten.</div>
+        <div class="">You don't have any messages.</div>
     {% endfor %}
 {% endblock content %}
 
@@ -90,7 +90,7 @@
                             {% if annonce.typ %}
                                 <span class="badge bg-primary mb-1" style="width: fit-content;">Gesuch</span>
                             {% else %}
-                                <span class="badge bg-success mb-1" style="width: fit-content;">Angebot</span>
+                                <span class="badge bg-success mb-1" style="width: fit-content;">Offer</span>
                             {% endif %}
                             <h5 class="mb-1"><a href="{% url 'annoncen:annonce' annonce.pk %}">{{ annonce }}</a></h5>
                             {{annonce.reserviert_von.all.count}} Nutzer möchte(n) die Annonce reservieren.<br>

@@ -12,25 +12,23 @@ from django.core.exceptions import PermissionDenied
 
 from django.contrib.auth.decorators import login_required
 
-from .geo import getLocation, getDistance
 from .helper_functions import active, blocked_from
 from datetime import date as d
 from django.db.models.functions import Lower
 
 from dateutil.relativedelta import relativedelta
-import folium
 
 
 def home(request):
 
     annoncen = active(Annonce.objects.exclude(reserviert=2), request.user).order_by('-date')
-    title = 'Alle Annoncen'
+    title = 'All Rental Offers'
 
     return render(request, 'annoncen/home.html', {'annoncen': annoncen, 'title': title})
 
 def sortbydate(request):
     annoncen = active(Annonce.objects.exclude(reserviert=2), request.user).order_by('-date')
-    title = "Alle Annoncen sortiert nach Datum:"
+    title = "Filtered with published date:"
 
     return render(request, 'annoncen/home.html', {'annoncen': annoncen, 'title': title})
 
@@ -48,7 +46,7 @@ def g_sortbydate(request):
 
 def sortbyavailold(request):
     annoncen = active(Annonce.objects.exclude(reserviert=2), request.user).order_by('available_until')
-    title = "Alle Annoncen sortiert nach Ablaufdatum:"
+    title = "Filtered with expiry date:"
 
     return render(request, 'annoncen/home.html', {'annoncen': annoncen, 'title': title})
 
@@ -67,7 +65,7 @@ def g_sortbyavailold(request):
 def sortbytitle(request):
     
     annoncen = active(Annonce.objects.exclude(reserviert=2), request.user).order_by(Lower('titel'))
-    title = "Alle Annoncen sortiert nach Titel A-Z:"
+    title = "Filtered from A to Z:"
 
     return render(request, 'annoncen/home.html', {'annoncen': annoncen, 'title': title})
 
@@ -88,7 +86,7 @@ def g_sortbytitle(request):
 def sortbytitlereverse(request):
     
     annoncen = active(Annonce.objects.exclude(reserviert=2), request.user).order_by(Lower('titel').desc())
-    title = "Alle Annoncen sortiert nach Titel Z-A:"
+    title = "Filtered from Z to A:"
 
     return render(request, 'annoncen/home.html', {'annoncen': annoncen, 'title': title})
 
@@ -115,7 +113,7 @@ def gesuche(request):
 
 def angebote(request):
     annoncen = active(Annonce.get_angebote().exclude(reserviert=2),request.user).order_by('-date')
-    title = "Alle Angebote"
+    title = "All Offers"
 
     return render(request, 'annoncen/home.html', {'annoncen': annoncen, 'title': title})
 
@@ -130,7 +128,7 @@ def createannonce(request):
 
         if form.is_valid():
 
-            post = form.save(commit=False)
+            post = form.save(commit=True)
 
             if not form.cleaned_data['available_until']:
 
@@ -165,24 +163,6 @@ def createannonce(request):
                 post.postleitzahl = request.user.profile.postleitzahl
 
 
-            # setze Koordinaten aus Adresse
-            address = ''
-
-            for item in [post.straße, post.hausnummer, post.postleitzahl, post.stadt]:
-
-                if  item != None:
-
-                    address = address + ' ' + str(item)
-
-            location = getLocation(address)
-
-            if location:
-                post.latitude = location.latitude
-
-                post.longitude = location.longitude
-
-            post.save()
-
 
             # Verlinke die Annonce mit den eingegebenen Kategorien
 
@@ -201,7 +181,6 @@ def createannonce(request):
                         k.save()
 
                         post.kategorie.add(k.pk)
-
 
             annonce = Annonce.objects.get(pk = post.pk)
             
@@ -247,72 +226,10 @@ def createannonce(request):
 
 def annonce(request, id):
 
-    def get_annonce_within_20km(requested_annonce, annonce_latitude, annonce_longitude):
-
-                closestAnnoncen = []
-
-                for annonce in active(Annonce.objects.all(),request.user).order_by('-date').values():
-
-                    if annonce['id'] != requested_annonce.pk and annonce['latitude'] != None:
-
-                        distance = getDistance((annonce_latitude, annonce_longitude), (annonce['latitude'], annonce['longitude']))
-
-                        if request.user.is_authenticated:
-
-                            if distance < request.user.profile.searchRadius:
-                                closestAnnoncen.append(annonce)
-
-                        else:
-
-                            if distance < 20:
-                                closestAnnoncen.append(annonce)
-
-                return closestAnnoncen
-
-    def get_map_with_surrounding_annoncen(annonce_latitude, annonce_longitude, annoncen_within_20km):
-
-                annonce_titel = requested_annonce.titel
-
-                actualmap = folium.Map(location=[annonce_latitude, annonce_longitude], zoom_start=14)
-
-                folium.Marker(location=[annonce_latitude, annonce_longitude], popup=annonce_titel ,
-
-                                icon=folium.Icon(color='red')).add_to(actualmap)
+  
 
 
-                for close_annonce in annoncen_within_20km:
 
-                    close_annonce_latitude = close_annonce['latitude']
-
-                    close_annonce_longitude = close_annonce['longitude']
-
-                    close_annonce_titel = close_annonce['titel']
-
-                    folium.Marker(location=[close_annonce_latitude, close_annonce_longitude], popup=close_annonce_titel).add_to(actualmap)
-
-                actualmap = actualmap._repr_html_()
-
-                return(actualmap)
-
-    def get_annonceproperties_from_coordinates(requested_annonce):
-
-        threeclosest = []
-
-        actualmap = None
-
-        if requested_annonce.latitude != None:
-
-            annonce_latitude = requested_annonce.latitude
-
-            annonce_longitude = requested_annonce.longitude
-
-            annoncen_within_20km = get_annonce_within_20km(requested_annonce, annonce_latitude, annonce_longitude)
-
-            threeclosest = annoncen_within_20km[:3]
-
-            actualmap = get_map_with_surrounding_annoncen(annonce_latitude, annonce_longitude, annoncen_within_20km)
-
-        return (threeclosest, actualmap)
 
     requested_annonce = get_object_or_404(Annonce, id=id)
 
@@ -335,8 +252,6 @@ def annonce(request, id):
 
     three_newest_annonce_with_same_author = active(Annonce.objects.filter(author=requested_annonce.author).exclude(pk=id), request.user).order_by('-date')[:3:1]
 
-    #Holt die drei nähesten Annoncen der ausgewählten Annonce in 20 km und eine Karte mit der Annonce und die innerhalb von 20km.
-    (closest, actualmap) = get_annonceproperties_from_coordinates(requested_annonce)
 
 
 
@@ -357,11 +272,7 @@ def annonce(request, id):
 
                 'three_newest_annonce_with_same_author': three_newest_annonce_with_same_author,
 
-                'closest': closest,
-
-                'hat_reserviert': hat_reserviert,
-
-                'actualmap':actualmap} 
+                'hat_reserviert': hat_reserviert} 
     #hat der request.user diese Annonce gemerkt
     hat_gemerkt = False
     if request.user in requested_annonce.gemerkt_von.all():
@@ -373,9 +284,7 @@ def annonce(request, id):
                 'annonce': requested_annonce,
                 'same_category': same_category,
                 'three_newest_annonce_with_same_author': three_newest_annonce_with_same_author,
-                'closest': closest,
                 'hat_reserviert': hat_reserviert,
-                'actualmap':actualmap,
                 'hat_gemerkt':hat_gemerkt}
     return render(request, 'annoncen/annonce.html', context)
 
@@ -459,24 +368,6 @@ def edit(request, id):
 
                 post.length = form.cleaned_data['length']
 
-
-            # setze Koordinaten aus Adresse
-            address = ''
-
-            for item in [post.straße, post.hausnummer, post.postleitzahl, post.stadt]:
-
-                if  item != None:
-
-                    address = address + ' ' + str(item)
-
-            location = getLocation(address)
-
-            if location:
-                post.latitude = location.latitude
-
-                post.longitude = location.longitude
-
-            post.save()
 
 
             # Verlinke die Annonce mit den eingegebenen Kategorien
@@ -790,7 +681,7 @@ def action_successfull(request):
     if pk:
         annonce = get_object_or_404(Annonce, pk = pk)
         annoncen = active(Annonce.objects.exclude(reserviert=2), request.user).order_by('-date')
-        title = 'Alle Annoncen'
+        title = 'All Offers'
         return render(request, 'annoncen/home.html', {'annoncen': annoncen, 'title': title, 'createdAnnonce': annonce})
 
     profile = request.GET.get('profile', '')
@@ -811,13 +702,13 @@ def action_successfull(request):
     deletedName = request.GET.get('delete', '')
     if deletedName:
         annoncen = active(Annonce.objects.exclude(reserviert=2), request.user).order_by('-date')
-        title = 'Alle Annoncen'
+        title = 'All Offers'
         return render(request, 'annoncen/home.html', {'annoncen': annoncen, 'title': title, 'deletedName': deletedName})
 
     deletedUser = request.GET.get('deleteUser', '')
     if deletedUser:
         annoncen = active(Annonce.objects.exclude(reserviert=2), request.user).order_by('-date')
-        title = 'Alle Annoncen'
+        title = 'All Offers'
         return render(request, 'annoncen/home.html', {'annoncen': annoncen, 'title': title, 'deletedUser': deletedUser})
 
 
@@ -955,7 +846,7 @@ def reservierungsliste(request, username):
 
     user = get_object_or_404(get_user_model(), username=username)
     annoncen = active(Annonce.objects.filter(reserviert_von=user), request.user).order_by('-date')
-    title = "Deine Reservierungen"
+    title = "Your Reservations"
     return render(request, 'annoncen/home.html', {'annoncen': annoncen, 'title': title})
 
 @login_required

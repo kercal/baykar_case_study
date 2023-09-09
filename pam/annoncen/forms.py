@@ -6,11 +6,10 @@ from django.utils.translation import gettext_lazy as _
 
 # cats = Kategorie.objects.all().values_list('name', 'name',) 
 cats_list = [
-    ('Wohnen', 'Wohnen'),
-    ('Musik', 'Musik'),
-    ('Kleidung', 'Kleidung'),
-    ('Tiere', 'Tiere'),
-    ('Elektronik', 'Elektronik')
+    ('Multi-rotor', 'Multi-rotor'),
+    ('Fixed-wing', 'Fixed-wing'),
+    ('Single-rotor', 'Single-rotor'),
+    ('VTOL', 'VTOL')
     ]
 
 CHOICES = [
@@ -19,30 +18,31 @@ CHOICES = [
 ]
 
 class AnnonceForm(forms.ModelForm):
-    titel = forms.CharField(label = 'Titel:')
-    straße = forms.CharField(label = 'Straße (optional):', required = False,)
-    hausnummer = forms.IntegerField(label = 'Hausnummer (optional):', required = False, 
+    titel = forms.CharField(label = 'Title:')
+    straße = forms.CharField(label = 'Street:', required = False,)
+    hausnummer = forms.IntegerField(label = 'House Number:', required = False, 
                                     validators=[MinValueValidator(1)])
-    stadt = forms.CharField(label = 'Stadt (optional)', required = False)
-    postleitzahl = forms.IntegerField(label = 'Postleitzahl (optional):', required = False, 
+    stadt = forms.CharField(label = 'City:', required = False)
+    postleitzahl = forms.IntegerField(label = 'Zip Code:', required = False, 
                                         validators=[MinValueValidator(1)])
-    adresszusatz = forms.CharField(label='Adresszusatz (optional);', required=False)
+    adresszusatz = forms.CharField(label='Additional Address Information:', required=False)
 
     nachricht = forms.CharField(label = '', required = False, widget = forms.Textarea,)
-    beschreibung = forms.CharField(label = 'Beschreibung:', widget = forms.Textarea,)
-    kontakt = forms.CharField(label = 'Kontaktmöglichkeit (Email oder Telefonnummer):')
-    typ = forms.ChoiceField(label = 'Art der Annonce:', choices=CHOICES)
+    beschreibung = forms.CharField(label = 'Desription:', widget = forms.Textarea,)
+    kontakt = forms.CharField(label = 'Contact (Email or Phone Number):')
+    typ = forms.ChoiceField(label = 'Type of Post:', required = False, choices=CHOICES)
     kategorie = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(),
                                         label ='', choices=cats_list, required=False)
-    bild_1 = forms.ImageField(label = 'Hauptbild zur Anzeige:', required = False)
-    bild_2 = forms.ImageField(label = 'Lade bis zu zwei weitere Bilder hoch:', required = False)
+    bild_1 = forms.ImageField(label = 'Main Photo:', required = False)
+    bild_2 = forms.ImageField(label = 'Add upto 2 more photos:', required = False)
     bild_3 = forms.ImageField(label = '', required = False)
 
-    width = forms.IntegerField(label= "Breite (in cm):", required=False, validators=[MinValueValidator(0)])
-    height = forms.IntegerField(label= "Höhe (in cm):", required=False, validators=[MinValueValidator(0)])
-    length = forms.IntegerField(label= "Länge (in cm):", required=False, validators=[MinValueValidator(0)])
+    width = forms.IntegerField(label= "Width (in cm):", required=False, validators=[MinValueValidator(0)])
+    height = forms.IntegerField(label= "Height (in cm):", required=False, validators=[MinValueValidator(0)])
+    length = forms.IntegerField(label= "Length (in cm):", required=False, validators=[MinValueValidator(0)])
+    weight = forms.IntegerField(label= "Weight (in kg):", required=False, validators=[MinValueValidator(0)])
 
-    available_until = forms.DateField(label='Bis wann soll die Annonce angezeigt werden?:', required=False,
+    available_until = forms.DateField(label='Until when is the rental available? :', required=False,
                                         widget=forms.DateInput(attrs={'class':'form-control', 'type':'date'}))
 
     class Meta:
@@ -53,20 +53,20 @@ class AnnonceForm(forms.ModelForm):
 form = AnnonceForm()
 
 class ProfileForm(forms.ModelForm):
-    bio = forms.CharField(label = 'Bio (schreibe etwas über dich):', required = False, 
+    bio = forms.CharField(label = 'Bio (write something about yourself):', required = False, 
                                 widget = forms.Textarea)
     enableChat = forms.BooleanField(label='Chat aktivieren?',
                                 required = False, help_text='Soll man dir Nachrichten schicken können?',)
-    bild_1 = forms.ImageField(label='Profilbild:', required=False)
-    straße = forms.CharField(label = 'Straße:', required = False)
+    bild_1 = forms.ImageField(label='Profile Picture:', required=False)
+    straße = forms.CharField(label = 'Street:', required = False)
     hausnummer = forms.IntegerField(label = 'Hausnummer:', required = False, 
                                     validators=[MinValueValidator(1)])
-    vorname = forms.CharField(label='Vorname:', required=False)
-    nachname = forms.CharField(label='Nachname:', required=False)
-    stadt = forms.CharField(label = 'Stadt:', required = False)
-    postleitzahl = forms.IntegerField(label = 'Postleitzahl:', required = False, 
+    vorname = forms.CharField(label='Name:', required=False)
+    nachname = forms.CharField(label='Surname:', required=False)
+    stadt = forms.CharField(label = 'City:', required = False)
+    postleitzahl = forms.IntegerField(label = 'Zip Code:', required = False, 
                                         validators=[MinValueValidator(1)])
-    adresszusatz = forms.CharField(label='Adresszusatz (optional);', required=False)
+    adresszusatz = forms.CharField(label='Additional Adress:', required=False)
     searchRadius = forms.IntegerField(label='Lege einen Suchradius für vorgeschlagene Annoncen in der Nähe fest (in km):')
 
     class Meta:
@@ -75,11 +75,11 @@ class ProfileForm(forms.ModelForm):
         exclude = ('user',)
         
 class ExtendForm(forms.Form):
-    available_until = forms.DateField(label='Bis wann soll die Annonce angezeigt werden?:',
+    available_until = forms.DateField(label='Until when is the rental available?:',
                                         widget=forms.DateInput(attrs={'class':'form-control', 'type':'date'}))
 
     def clean(self):
         au = self.cleaned_data.get('available_until')
         if au <= datetime.today().date():
-            raise forms.ValidationError({'available_until': _("Datum muss in der Zukunft liegen."),})
+            raise forms.ValidationError({'available_until': _("The date must be in the future."),})
         return au

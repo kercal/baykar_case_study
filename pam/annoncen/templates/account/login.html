@@ -1,14 +1,14 @@
 {% extends 'annoncen/base.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}Anmelden{% endblock %}
+{% block title %}Login{% endblock %}
 
-{% block content_title %}Anmelden{% endblock %}
+{% block content_title %}Login{% endblock %}
 
 {% block content %}
 <form method="post" style="max-width: 500px;">
   {% csrf_token %}
   {{ form | crispy }}
-  <button class="btn btn-primary" type="submit">Anmelden</button>
+  <button class="btn btn-primary" type="submit">Login</button>
 </form>
 {% endblock %}

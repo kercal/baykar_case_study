@@ -19,7 +19,7 @@
     <body>
         <nav class="navbar sticky-top navbar-expand-md navbar-dark">
             <div class="navbarWrap container-fluid">
-              <span class="navbar-brand"><a class="nav-link" aria-current="page" href="{% url 'annoncen:home'%}">Schwarzes Brett</a></span>
+              <span class="navbar-brand"><a class="nav-link" aria-current="page" href="{% url 'annoncen:home'%}">Baykar Tech</a></span>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
@@ -27,17 +27,14 @@
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                   </li>  
                   <li class="nav-item">
-                    <a class="nav-link nav-link-top" href="{% url 'annoncen:createannonce'%}">Annonce erstellen</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link nav-link-top" href="{% url 'maps:bigmap'%}">Karte</a>
+                    <a class="nav-link nav-link-top" href="{% url 'annoncen:createannonce'%}">Rent UAVs!</a>
                   </li>
                 </ul>
                   <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item me-3 dropdown">
-                      <a class="nav-link nav-link-top dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Kategorien
+                      <a class="nav-link nav-link-top dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Categories
                       </a>
-                      <div class="dropdown-menu">
+                      <div class="dropdown-menu"> 
                         {% for item in kategorien %}
                         <a class="dd-item" href="{% url 'annoncen:category' item %}">{{ item }}</a>
                         {% endfor %}
@@ -47,7 +44,7 @@
                     <form id="searchForm" class="d-flex" method =POST action="{% url 'annoncen:search_result' %}">
                       {% csrf_token %}
                       <div class="input-group">
-                      <input class="form-control me-2 border-end-0 border rounded-pill" style="width: 300px;" id="search" type="search" placeholder="Suchbegriff eingeben" aria-label="Suche" name="searched" value="{{searched}}" autocomplete="on">
+                      <input class="form-control me-2 border-end-0 border rounded-pill" style="width: 300px;" id="search" type="search" placeholder="Search for:" aria-label="Suche" name="searched" value="{{searched}}" autocomplete="on">
                       <span class="input-group-append">
                       <button class="btn btn-outline-secondary bg-white border-bottom-0 border rounded-pill ms-n5" type="submit">
                         <i class="bi bi-search"></i>
@@ -60,7 +57,7 @@
                 <ul class="navbar-nav ms-auto mb-2 mb-md-0">
                 {% if request.user.is_authenticated %}
                     <li class="nav-item dropdown dropleft">
-                      <a class="nav-link nav-link-top dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Hallo {{ request.user }}  
+                      <a class="nav-link nav-link-top dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Hello {{ request.user }}  
                         {% if unread_threads or expired or pending %}
                           <span class= "badge rounded-pill bg-danger">
                             {{ unread_threads.count|add:expired.count|add:pending.count}}
@@ -68,16 +65,16 @@
                         {% endif %}
                       </a>
                       <div class="dropdown-menu dropdown-menu-end" >
-                        <a class="dropdown-item" href="{% url 'annoncen:profile' request.user %}">Profil</a>
-                        <a class="dropdown-item" href="{% url 'annoncen:profile_settings' user %}">Einstellungen</a>
-                          <a class="dropdown-item" href="{% url 'annoncen:reservierungsliste' user %}">Reservierungen</a>
-                        <a class="dropdown-item" href="{% url 'chat:inbox' %}">Nachrichten
+                        <a class="dropdown-item" href="{% url 'annoncen:profile' request.user %}">Profile</a>
+                        <a class="dropdown-item" href="{% url 'annoncen:profile_settings' user %}">Settings</a>
+                          <a class="dropdown-item" href="{% url 'annoncen:reservierungsliste' user %}">Reserved Offers</a>
+                        <a class="dropdown-item" href="{% url 'chat:inbox' %}">Messages
                           {% if unread_threads or expired or pending %}
                           <span class= "badge rounded-pill bg-danger">
                             {{ unread_threads.count|add:expired.count|add:pending.count}}
                           <span class="visually-hidden">unread messages</span>
                         {% endif %}
-                          <a class="dropdown-item" href="{% url 'annoncen:merkliste' user %}">Gespeicherte Annoncen</a>
+                          <a class="dropdown-item" href="{% url 'annoncen:merkliste' user %}">Bookmarked Offers</a>
                         </a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'account_logout' %}" style="border-top: 0.5px solid gray;">Logout</a>
@@ -85,9 +82,9 @@
                     </li>
                   {% else %} 
                   <li class="nav-item">
-                    <a class="nav-link nav-link-top active" aria-current="page" href="{% url 'account_login'%}">Anmelden</a>
+                    <a class="nav-link nav-link-top active" aria-current="page" href="{% url 'account_login'%}">Login</a>
                   <li class="nav-item">
-                      <a class="nav-link nav-link-top active" aria-current="page" href="{% url 'account_signup'%}">Registrieren</a>
+                      <a class="nav-link nav-link-top active" aria-current="page" href="{% url 'account_signup'%}">Register</a>
                   {% endif %}
                 </ul>  
               </div>

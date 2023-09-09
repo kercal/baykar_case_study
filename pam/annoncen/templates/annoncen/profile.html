@@ -6,9 +6,9 @@ Home
 
 {% block content_title %}
     {% if profil.user == request.user%}
-        Mein Profil
+        My Profile
     {% else %}
-        Profil von {{profil.user.username}}
+        Profil of {{profil.user.username}}
     {% endif %}
 {% endblock %}
 
@@ -16,7 +16,7 @@ Home
     {% if profil.profilbild %}
         <img src="{{profil.profilbild.url}}" class="rounded-circle mx-auto d-block" alt="Profil-Bild" style="object-fit: contain; width: 100%; height: auto; max-width: 500px;">
     {% else %}
-        <div class="container p-5 my-5 bg-secondary text-white d-flex align-items-center justify-content-center rounded-circle bg-info" style="width:300px; height:300px;" alt="Profil-Bild">Profil von {{profil.user.username}}</div>
+        <div class="container p-5 my-5 bg-secondary text-white d-flex align-items-center justify-content-center rounded-circle bg-info" style="width:300px; height:300px;" alt="Profil-Bild">Profile of {{profil.user.username}}</div>
     {% endif %}
     {% if request.user == profil.user %}
         {% if profil.vorname %}{{profil.vorname}}{% endif %} {% if profil.nachname %}{{profil.nachname}}{% endif %}
@@ -45,7 +45,7 @@ Home
                 </p>
         {% endif %}
     {% endif %}
-    <b>Angemeldet seit:</b><br>
+    <b>User since:</b><br>
     {{profil.user.date_joined|date:"d. F. Y" }}<br>
     <br>
     {% if not blocked_by %}
@@ -82,7 +82,7 @@ Home
     <br><br>
     {% if profil.user == request.user%}
     <a class="btn btn-outline-dark" href="{% url 'annoncen:profile_settings' user %}">
-        Profil bearbeiten
+        Edit Profile
     </a>
     {% endif %}
     <br><br>
@@ -90,12 +90,12 @@ Home
     <h5>Annoncen von {{profil.user.username}}</h5>
         <li class="nav-item dropdown">
             <a class="nav-link nav-link-top dropdown-toggle rounded bg-secondary text-white p-3" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                 Alle Filter
+                 All Filters
             </a>
             <div class="dropdown-menu" >
-                <a class="dropdown-item" href="/profile/{{user.username}}">Alle Annoncen</a>
-                <a class="dropdown-item" href="/profile/{{user.username}}/angebote">Angebote</a>
-                <a class="dropdown-item" href="/profile/{{user.username}}/gesuche">Gesuche</a>
+                <a class="dropdown-item" href="/profile/{{user.username}}">All Posts</a>
+                <a class="dropdown-item" href="/profile/{{user.username}}/angebote">Offers</a>
+                <a class="dropdown-item" href="/profile/{{user.username}}/gesuche">Searches</a>
             </div>
         </li>
 
@@ -145,10 +145,10 @@ Home
     <br>
     {% if profil.user == request.user%}
         {% if not hat_annoncen %}
-            Du hast keine Annoncen gespeichert.
+            You haven't saved any posts.
         {% endif%}<br>
         <a class="btn btn-outline-dark" href="{% url 'annoncen:createannonce'%}">
-            Annoncen hinzufügen
+            Post Rental Offer
         </a>
     {% endif %}
     {% if changedSettings %}

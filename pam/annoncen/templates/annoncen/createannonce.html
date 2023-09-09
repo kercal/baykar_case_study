@@ -2,23 +2,22 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-Annonce Erstellen
+UAV Rental
 {% endblock title%}
 
 {% block content_title %}
-Neue Annonce
+New Rental
 {% endblock %}
 
 {% block content %}
 <form method="POST" class="annonce-form" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.titel | as_crispy_field }}
-    {{ form.typ | as_crispy_field }}
     {{ form.beschreibung | as_crispy_field }}
     {{ form.kontakt | as_crispy_field }}
     <p>
         <a class=" btn btn-success dropdown-toggle" data-bs-toggle="collapse" href="#bilder" role="button" aria-expanded="false" aria-controls="bilder">
-            Bilder hinzufügen (optional)
+            Pictures:
         </a>
     </p>
     <div class="collapse mb-3" id="bilder">
@@ -32,7 +31,7 @@ Neue Annonce
     </div>  
     <p>
         <a class="btn btn-success dropdown-toggle" data-bs-toggle="collapse" href="#maße" role="button" aria-expanded="true" aria-controls="maße">
-            Maße hinzufügen (optional)
+            Measurements:
         </a>
     </p>
     <div class="collapse mb-3 {% if form.errors %}
@@ -46,13 +45,14 @@ Neue Annonce
                 {{ form.height | as_crispy_field}}
                 {{ form.length | as_crispy_field}}
                 {{ form.width  | as_crispy_field}}
+                {{ form.weight  | as_crispy_field}}
             </div>
         </div>
     </div>   
     
     <p>
         <a class=" btn btn-success dropdown-toggle" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-            Kategorien hinzufügen:
+            Categories:
         </a>
     </p>
     <div class="collapse mb-3" id="collapseExample">
@@ -62,7 +62,7 @@ Neue Annonce
     </div>
     <p>
         <a class=" btn btn-success dropdown-toggle" data-bs-toggle="collapse" href="#until" role="button" aria-expanded="false" aria-controls="until">
-            Verfügbar bis (optional)
+            Deadline:
         </a>
     </p>
     <div class="collapse mb-3 {% if form.errors %}
@@ -79,7 +79,7 @@ Neue Annonce
     {% if address_is_set %}
     <p>
         <a class=" btn btn-success dropdown-toggle" data-bs-toggle="collapse" href="#address" role="button" aria-expanded="false" aria-controls="address">
-            Adresse
+            Adress:
         </a>
     </p>
     <div class="collapse mb-3" id="address">
@@ -126,7 +126,7 @@ Neue Annonce
                         <div class="col-sm">
                             <div id="div_id_postleitzahl" class="mb-3">
                                 <label for="id_postleitzahl" class="form-label">
-                                    Postleitzahl (optional):
+                                    Zip Code:
                                 </label>                                    
                                 <input type="number" name="postleitzahl" class="numberinput form-control no-spin" id="id_postleitzahl">
                             </div> 
@@ -142,7 +142,7 @@ Neue Annonce
     {% else %}
         <p>
             <a class=" btn btn-success dropdown-toggle" data-bs-toggle="collapse" href="#address" role="button" aria-expanded="false" aria-controls="address">
-                Adresse
+                Adress
             </a>
         </p>
         <div class="collapse mb-3" id="address">
@@ -162,7 +162,7 @@ Neue Annonce
                     <div class="col-sm">
                         <div id="div_id_postleitzahl" class="mb-3">
                             <label for="id_postleitzahl" class="form-label">
-                                Postleitzahl (optional):
+                                Zip Code:
                             </label>                                    
                             <input type="number" name="postleitzahl" class="numberinput form-control no-spin" id="id_postleitzahl">
                         </div> 
@@ -175,7 +175,7 @@ Neue Annonce
 
     <p>
         <a class=" btn btn-success dropdown-toggle" data-bs-toggle="collapse" href="#msg" role="button" aria-expanded="false" aria-controls="msg">
-            Zusätzliche Informationen hinzufügen (optional)
+            Additional Information:
         </a>
     </p>
     <div class="collapse " id="msg">
@@ -183,6 +183,6 @@ Neue Annonce
             {{ form.nachricht | as_crispy_field }}
         </div>
     </div>
-    <button type="submit" class="btn btn-primary">Annonce veröffentlichen</button>
+    <button type="submit" class="btn btn-primary">Publish Offer:</button>
 </form>
 {% endblock content %} 

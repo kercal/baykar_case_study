@@ -1,79 +1,68 @@
-# PAM II
+# Case Study
 
 ## Installation
 
-Ich habe hier jeweils nur die Linux/MacOS Befehle reingepackt, unter Windows können die eventuell ein wenig abweichen.
+These are the windows commands, it can be a bit different with Mac and Linux.
 
-1. Das Git Repository auf euren PC klonen:
+1. Clone git repo to PC:
     ```
     git clone https://git.cs.uni-kl.de/agile-methoden-2/ss22/team/pam-ii.git
-    cd pam-ii
+    cd Baykar - Case Study
+    cd pam
     ```
-2. Auf den Branch dev wechseln:
-    ```
-    git checkout dev
-    ```
-
-3. Installiere die aktuelle Python-Version (3.10.4): https://www.python.org/downloads/
-
-    Ob du schon die richtige Python Version installiert hast, kannst du mit
-    ```
-    python3 --version
-    ```
-    prüfen.
+2. Install the actual Python version: https://www.python.org/downloads/
 
 
-4. Erstelle eine Virtual Environment. In diesem Ordner werden alle Python Pakete gespeichert, die wir für unser Projekt brauchen:
+    python --version
     ```
-    python3 -m venv pam_venv
+    
+
+4. Create a Virtual Environment. All Python packages that we need for our project are stored in this folder:
+    ```
+    python -m venv pam_venv
     ```
 
-5. Nun kannst du die Virtual Environment aktivieren:
+5. Now we can activate the environment:
     ```
-    source pam_venv/bin/activate
+    pam_venv\Scripts\activate
     ```
 
-    An dem ```(pam_env)```in der Kommandozeile erkennst du, dass sie aktiviert ist.
-    Die Virtual Environment sollte immer aktiv sein, wenn du irgendetwas im Terminal am Projekt machst, damit alle Pakete gefunden werden und damit neue installierte Pakete dort gespeichert werden. 
+    You can tell that it is activated by the ```(pam_env)``` in the command line. The Virtual Environment should always be active when you do anything in the terminal on the project so that all packages are found and new installed packages are saved there.
 
-6. In der Datei requirements.txt sind alle bisher von uns verwendeten Python Pakete im Projekt hinterlegt.
-    Diese kannst du nun einfach in deine Virtual Environment herunterladen (dazu muss diese aktiviert sein!):
+6. All Python packages I have used so far in the project are stored in the requirements.txt file. You can simply download these into your     virtual environment (this must be activated for this!):
     ```
     pip3 install -r requirements.txt
     ```
 
-    Wenn du ein neues Paket installiert hast, kannst du die requirements.txt Datei updaten:
-    ```
-    pip3 freeze > requirements.txt
-    ```
-    > **_Hinweis:_**  Falls ```pip3```nicht funktioniert, versuche stattdessen ```pip```.
+    > **_Note:_**  If ```pip3```doesn't work, try instead ```pip```.
 
-7. Erstelle sqlite Datenbank:
+7. Create sqlite database:
     ```
     cd pam
     python manage.py migrate
     ```
-    Nun wurde die Datei db.sqlite3 erstellt, die alle Datenbanktabellen speichert.
+    Now the file db.sqlite3 has been created, which stores all the database tables.
 
-## Starte lokalen Testserver
+## Start local server
 ```
-python3 manage.py runserver
+python manage.py runserver
 ```
 
-Nun kannst du im Browser unter http://localhost:8000 den aktuellen Stand der Webseite sehen.
+Current status of the project can be seen in the browser at http://localhost:8000.
 
-## Django Dokumentation
-
-https://docs.djangoproject.com/en/4.0/
-
-Es gibt ein sehr gutes [Step-by-Step Tutorial](https://docs.djangoproject.com/en/4.0/intro/tutorial01/) für eine Umfragewebseite. Viele der dortigen Schritte sollten bei unserem Projekt sehr ähnlich sein.
 
 ## Django admin
 
-Unter http://localhost:8000/admin kann man auf das Admin-Interface von Django zugreifen.
+You can access the Django admin interface at http://localhost:8000/admin.
 
-Dazu musst du mit 
+For that, a superuser needs to be created:
 ```
 python manage.py createsuperuser
 ```
-einen Admin Benutzer erstellen.
+
+Remarks:
+
+-Since I wasn't expecting a case study right after the day I applied, I noticed it a bit late so in reality I had a lot less time than 3 days.
+-I used some code snippets from one of **_My Own_** personal projects that was quite similar to the case study, I didn't use any template or code from the internet, so that's why some of the codes are in German or extra, I wanted to refactor it but with little time that was the best I could do.
+-Instead of Postgresql, I used the default sqlite database but it can be converted very easily.
+-For some reason there is a bug with usernames. When somebody publishes a post, the username is shown as None so I can't link it to the profile. I'm pretty sure this can also be fixed quickly.

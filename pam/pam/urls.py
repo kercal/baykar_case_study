@@ -21,6 +21,5 @@ urlpatterns = [
     path('', include('annoncen.urls')),
     path("accounts/", include("allauth.urls")),
     path('admin/', admin.site.urls),
-    path('chat/', include("chat.urls", namespace='chat')),
-    path('maps/', include("maps.urls", namespace='maps'))
+    path('chat/', include("chat.urls", namespace='chat'))
 ]

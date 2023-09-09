@@ -53,7 +53,7 @@ class Annonce(models.Model):
     nachricht = models.TextField(null=True, blank=True)
 
     #0 für eine Angebots-Annonce, 1 für eine Nachfrage-Annonce
-    typ = models.BooleanField(null=False, default=0)
+    typ = models.BooleanField(null=True, default=0)
 
     #0 für frei, 1 für reserviert, 2 für möchte reservieren
     reserviert = models.IntegerField(default=0, blank=True)
