@@ -29,7 +29,7 @@ These are the windows commands, it can be a bit different with Mac and Linux.
 
     You can tell that it is activated by the ```(pam_env)``` in the command line. The Virtual Environment should always be active when you do anything in the terminal on the project so that all packages are found and new installed packages are saved there.
 
-6. All Python packages I have used so far in the project are stored in the requirements.txt file. You can simply download these into your     virtual environment (this must be activated for this!):
+6. All Python packages I have used so far in the project are stored in the requirements.txt file. You can simply download these into your     virtual environment (this must be activated for this! and it might take a while so please wait until everything is installed):
     ```
     pip3 install -r requirements.txt
     ```
@@ -59,6 +59,16 @@ For that, a superuser needs to be created:
 ```
 python manage.py createsuperuser
 ```
+
+![1](https://github.com/kercal/baykar_case_study/assets/105946652/dfa81e1a-5d76-47fc-8be0-e07e05350df2)
+![2](https://github.com/kercal/baykar_case_study/assets/105946652/729b114c-3920-4cdc-b991-b31156c319d9)
+![3](https://github.com/kercal/baykar_case_study/assets/105946652/87416ce0-512a-419b-a628-91ff9f732774)
+
+
+
+
+
+
 
 Remarks:
 
